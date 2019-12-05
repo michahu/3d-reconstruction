@@ -1,3 +1,7 @@
+Camera PCA for SfM Generated Images
+
+What is [SfM](https://en.wikipedia.org/wiki/Structure_from_motion)?
+
 Resources for constructing objects from collections of cameras:
 
 - [Robust Global Translations with 1DSfM](http://www.cs.cornell.edu/projects/1dsfm/)
