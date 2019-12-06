@@ -2,6 +2,8 @@ Camera PCA for SfM Generated Images
 
 What is [SfM](https://en.wikipedia.org/wiki/Structure_from_motion)?
 
+
+
 Resources for constructing objects from collections of cameras:
 
 - [Robust Global Translations with 1DSfM](http://www.cs.cornell.edu/projects/1dsfm/)
@@ -17,6 +19,9 @@ cloud(original with all cameras retained). Generally, we expect there to be fewe
 than in old, and the ordering returned to us might not be the same on different runs of the
 algorithm.
 
+Relevant Papers
+- [Modeling the World from Internet Photo Collections](http://phototour.cs.washington.edu/ModelingTheWorld_ijcv07.pdf)
+- [Rapid 3D Reconstruction for Image Sequence Acquired from UAV Camera](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5795716/)
 - [Weight Loss for Point Clouds
 Classification](https://iopscience.iop.org/article/10.1088/1742-6596/1229/1/012045/pdf)
 - [CS468: 3D Deep Learning
