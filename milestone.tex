@@ -1,19 +1,17 @@
 \documentclass[11pt]{extarticle}
 \usepackage[utf8]{inputenc}
 \usepackage{cite}
-\usepackage{natbib}
 \usepackage[margin=0.5in]{geometry}
 
 %-------------------- Formatting 
 
 \setlength{\parindent}{1cm}
 \setlength{\parskip}{6pt}
-\setlength{\bibsep}{0.0pt}
 \pagenumbering{gobble} % Remove page number
 
 %-------------------- Title
 
-\title{Camera PCA for 3D reconstruction \vspace{-1ex}}
+\title{Camera PCA for 3D Reconstruction \vspace{-1ex}}
 \author{Julian Knodt, Justin Yan, Michael Hu}
 \date{}
 \begin{document}
@@ -21,16 +19,18 @@
 
 %-------------------- Text
 
+{\large \textbf{Problem}}
+
+How does the quality of 3D scene reconstructions from 2D images degrade as we remove images? Which 2D images are most vital for 3D scene reconstruction?
+
 {\large \textbf{Background}}
 
-
-
+Structure from motion (SFM) systems recover camera orientations and a 3D scene reconstruction from a stream of 2D images. In 2006, Snavely et. al. adapted the SFM algorithm proposed by Brown and Lowe \cite{2006}
 
 {\large \textbf{Approach}}
 
 
-
 % \bibliographystyle{unsrt}
-% \bibliography{}
+\bibliography{reconstruction.bib}
 
 \end{document}
