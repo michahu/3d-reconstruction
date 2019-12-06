@@ -29,3 +29,5 @@ Classification](https://iopscience.iop.org/article/10.1088/1742-6596/1229/1/0120
 on Point Cloud
 Data](http://graphics.stanford.edu/courses/cs468-17-spring/LectureSlides/L14%20-%203d%20deep%20learning%20on%20point%20cloud%20representation%20(analysis).pdf)
 - [Multi-image 3D reconstruction data evaluation](https://www.sciencedirect.com/science/article/abs/pii/S1296207412001926)
+- [Network Principles for SfM:
+Disambiguating Repeated Structures with Local Context](https://www.cv-foundation.org/openaccess/content_iccv_2013/papers/Wilson_Network_Principles_for_2013_ICCV_paper.pdf)
