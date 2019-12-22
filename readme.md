@@ -1,4 +1,4 @@
-**Bundler Installation and Running Bash Program Steps**
+**Bundler Installation and Running Bash Program Steps for Linux**
 
 1. ```git clone https://github.com/snavely/bundler_sfm.git```
 2. Visit http://www.cs.cornell.edu/~snavely/bundler/ and Bundler Version 0.4. 
@@ -13,6 +13,8 @@
 9. Check to see that everything works by navigating to one of the example directories (e.g. ```/path/to/bundler/examples/kermit```) and calling the bash program: ```bash ../../RunBundler.sh```. If everything works, you should see a populated ```bundler.out``` file in the ```kermit/bundle``` folder
 
 There's also a Python script that is supposed to do the same thing but I haven't played around with it yet.
+
+@Julian I just found this: http://openendedgroup.com/field/ReconstructionDistribution which might be easier for MacOS.
 
 
 Camera PCA for SfM Generated Images
