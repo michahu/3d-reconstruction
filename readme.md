@@ -9,9 +9,10 @@
 6. Install ImageMagick: ```sudo apt install imagemagick```. 
 7. Do this: ```sudo apt-get install libc6-dev-i386``` as per https://github.com/snavely/bundler_sfm/issues/36.
 8. Install the correct matrix libraries: ```sudo apt-get install libblas-dev``` as per https://github.com/snavely/bundler_sfm/issues/21. You may have to run ```sudo apt-get autoremove libblas3``` and ```sudo apt-get autoremove libopenblas-base``` first.
-7. In bashrc or bash_profile, add the following line: ```export LD_LIBRARY_PATH="/path/to/bundler/bin"```. For instance, I added ```export LD_LIBRARY_PATH="/home/justiny/Documents/Princeton/Courses/COS429/Project/bundler_sfm/bin"```
-8.  Navigate to bundler directory and ```make```.
-9. Check to see that everything works by navigating to one of the example directories (e.g. ```/path/to/bundler/examples/kermit```) and calling the bash program: ```bash ../../RunBundler.sh```. If everything works, you should see a populated ```bundler.out``` file in the ```kermit/bundle``` folder
+9. Install FORTRAN compiler: ```sudo apt-get install gfortran```.
+10. In bashrc or bash_profile, add the following line: ```export LD_LIBRARY_PATH="/path/to/bundler/bin"```. For instance, I added ```export LD_LIBRARY_PATH="/home/justiny/Documents/Princeton/Courses/COS429/Project/bundler_sfm/bin"```
+11.  Navigate to bundler directory and ```make```.
+12. Check to see that everything works by navigating to one of the example directories (e.g. ```/path/to/bundler/examples/kermit```) and calling the bash program: ```bash ../../RunBundler.sh```. If everything works, you should see a populated ```bundler.out``` file in the ```kermit/bundle``` folder
 
 There's also a Python script that is supposed to do the same thing but I haven't played around with it yet.
 
