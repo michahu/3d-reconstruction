@@ -1,3 +1,8 @@
+**Reading a bundler outfile:**
+
+https://www.cs.cornell.edu/~snavely/bundler/bundler-v0.4-manual.html
+
+
 **Bundler Installation and Running Bash Program Steps for Linux**
 
 1. ```git clone https://github.com/snavely/bundler_sfm.git```
