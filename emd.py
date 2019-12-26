@@ -7,7 +7,7 @@ def emd(x1, x2):
     N = len(x1)
     d = cdist(x1, x2)
     assignment = linear_sum_assignment(d)
-    print(d[assignment].sum() / N)
+    return (d[assignment].sum() / N)
 
 if __name__ == '__main__':
     x1 = np.array([1])[:, np.newaxis]
