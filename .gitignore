@@ -7,3 +7,5 @@
 *.blg
 data*
 settings.json
+.ipynb_checkpoints/
+scratchwork.ipynb
