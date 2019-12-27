@@ -40,7 +40,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 # doesn't exist yet
-training_data = np.load('training_data.npz')['data']
+training_data = np.load('data.npz')['training_data']
 
 for epoch in range(2):
     running_loss = 0.0
