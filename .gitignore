@@ -10,3 +10,5 @@ settings.json
 .ipynb_checkpoints/
 scratchwork.ipynb
 *.pyc
+bundler_sfm/
+easyBundler/
