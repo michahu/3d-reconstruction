@@ -1,3 +1,9 @@
+**Running ```loss_plots.py```**
+```loss_plots.py``` basically bootstraps bundler by chdir into a folder containing reconstruction images, creating a bundler configuration file on the fly, and running bundler on a growing list of images. The script takes care of unzipping gzipped sift files and creating a reference ```gold.out``` bundle from all the images in a sequence if it doesn't already exist.
+1. Create a data folder somewhere in the repo and make sure it's untracked by git.
+2. Run ```python loss_plots.py --data_loc <rel/path/to/data> --bundler_loc <rel/path/to/RunBundler.sh> --start_idx <i> --end_idx <j> --step <k>```, making sure that ```<i>``` and ```<j>``` are within bounds of the images listed in ```list.txt```.
+3. Optionally run with ```--to_npz``` to save the losses to a zipped npz.
+
 **Reading a bundler outfile:**
 
 https://www.cs.cornell.edu/~snavely/bundler/bundler-v0.4-manual.html
