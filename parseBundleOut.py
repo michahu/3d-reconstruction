@@ -1,3 +1,7 @@
+#!/usr/local/bin/python3
+
+# might need to adjust above line to point at version of python3
+
 # note: this script doesn't work if the file cannot be held in memory.
 # current implementation should work, as bundler outfiles are less than 1GB
 
@@ -5,7 +9,7 @@
 # can also import the method
 # Saves as a npz file.
 
-# Load instructions: 
+# Load instructions:
 # data = np.load(/path/to/new/file.npz)
 # points = data['points'] <-- loads as a numpy array
 
@@ -14,21 +18,37 @@ import numpy as np
 
 # saves parsed file to .npz file
 def parseFile(file, save_path, toNpz=True):
-    f = open(file, 'r')
-    lines = f.readlines()
-    N = len(lines)
-    # print(f'NUMBER OF POINTS: {lines[1].split()[1]}')
-    points = int(lines[1].split()[1])
+    with open(file, 'r') as f:
+      lines = f.readlines()
+      N = len(lines)
+      # print(f'NUMBER OF POINTS: {lines[1].split()[1]}')
+      n_cams, n_points = map(int, lines[1].split())
 
-    arr = []
-    for i in range(1, points + 1):
-        index = N - i * 3
-        arr.append(lines[index].split()) 
+      pts = []
+      for i in range(1, n_points + 1):
+          index = N - i * 3
+          pts.append(np.fromstring(lines[index], sep = " "))
+      cams = []
+      offset = 2
+      # https://github.com/snavely/bundler_sfm#output-format
+      for i in range(0, n_cams):
+          idx = offset + i * 5
+          focal_length, rad_dist1, rad_dist2 = np.fromstring(lines[idx], sep = " ")
+          cams.append({
+            "focal_length": focal_length,
+            "rad_dist1": rad_dist1,
+            "rad_dist2": rad_dist2,
+            "rot": np.array([np.fromstring(lines[idx+j], sep=" ") for j in range(1, 4)]),
+            "trans": np.fromstring(lines[idx+4], sep=" "),
+          })
 
-    if toNpz:
-        np.savez(save_path, points=arr)
-    else:
-        return arr
+      if toNpz:
+          np.savez(save_path, points=pts, cameras=cams)
+      else:
+          return arr
 
 if __name__ == '__main__':
+    if len(sys.argv) < 3:
+      print("Usage: ./parseBundleOut.py <bundle.out> <out.npz>")
+      exit()
     parseFile(sys.argv[1], sys.argv[2])

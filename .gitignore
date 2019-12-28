@@ -11,3 +11,6 @@ settings.json
 scratchwork.ipynb
 *.pyc
 plots/
+bundler_sfm/
+easyBundler/
+*.swp
