@@ -45,7 +45,7 @@ def parseFile(file, save_path, toNpz=True):
       if toNpz:
           np.savez(save_path, points=pts, cameras=cams)
       else:
-          return arr
+          return np.array(pts)
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
