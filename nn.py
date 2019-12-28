@@ -13,7 +13,7 @@
 # R25 -> R20 -> R16
 
 # Other approaches to consider:
-# SVM, Random Forest 
+# SVM, Random Forest
 
 # Following code is adapted from https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
 
@@ -24,7 +24,6 @@ import torch.optim as optim
 import numpy as np
 
 class CameraClassifier(nn.Module):
-
     def __init__(self):
         super().__init__()
         self.hidden = nn.Linear(25, 20)

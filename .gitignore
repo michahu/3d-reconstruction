@@ -12,3 +12,4 @@ scratchwork.ipynb
 *.pyc
 bundler_sfm/
 easyBundler/
+*.swp
