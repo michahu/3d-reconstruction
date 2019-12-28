@@ -63,12 +63,12 @@ def unzip_sift_keys(dir=os.curdir):
                     shutil.copyfileobj(f_in, f_out)
 
 # prepares a data directory to run bundler in; bundler_loc and data_loc are relative from current directory, image_list is relative from data_loc
-def bootstrap(bundler_loc, data_loc, image_list=PARTIAL_IMAGE_LIST_FILENAME, create_gold=False):
+def bootstrap(bundler_loc, data_loc, image_list=IMAGE_LIST_FILENAME, create_gold=False):
     data_loc = os.path.abspath(data_loc)
     bundler_loc = os.path.abspath(bundler_loc)
 
     os.chdir(data_loc)
-
+    shutil.copy(IMAGE_LIST_FILENAME, PARTIAL_IMAGE_LIST_FILENAME)
     # config ensures that bundler skips re-creating SIFT features
     # and uses the partial reconstruction image list
     new_config = cp.ConfigParser()
@@ -97,7 +97,7 @@ def main(args):
     bundler_loc = os.path.abspath(args.bundler_loc)
     n = int(args.num_images)
 
-    bootstrap(bundler_loc, data_loc, create_gold=False)
+    bootstrap(bundler_loc, data_loc, PARTIAL_IMAGE_LIST_FILENAME, create_gold=False)
     run_bundler(bundler_loc, data_loc, n)
 
 if __name__ == '__main__':

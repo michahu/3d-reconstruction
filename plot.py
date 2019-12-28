@@ -12,10 +12,8 @@ import time
 def plot_camera_losses(config: cp.ConfigParser, n_start: int, n_end: int, step: int, to_npz=True):
 
     full_list_loc = config['Options']['IMAGE_LIST']
-    gold_bundle = read_or_create_gold_bundle(config['Options']['bundler'], config['Options']['data_loc'])
-
-    bootstrap(config['Options']['bundler'], config['Options']['data_loc'], PARTIAL_IMAGE_LIST_FILENAME)
-
+    bootstrap(config['Options']['bundler'], config['Options']['data_loc'], image_list=PARTIAL_IMAGE_LIST_FILENAME, create_gold=False)
+    gold_bundle = read_or_create_gold_bundle(config['Options']['bundler'])
     x = np.array(range(n_start, n_end+1, step))
     y = np.zeros(len(x))
 
@@ -42,8 +40,11 @@ def plot_camera_losses(config: cp.ConfigParser, n_start: int, n_end: int, step: 
     x = list(map(lambda k: min(n_end+1, k+step), x))
     print(x)
     print(y)
-    plt.figure()
+    fig = plt.figure()
     plt.plot(x, y)
+    plt.xlabel('Num. of Cameras')
+    plt.ylabel('Earth-Mover\'s Distance (EMD)')
+    plt.title('ET Reconstruction Loss')
     plt.show()
     if to_npz:
         np.savez(f'partial-{time.strftime("%Y%m%d-%H%M%S")}', x, y)
@@ -62,7 +63,7 @@ def main(args):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_loc", help="path to folder containing the reconstruction images", default="data/ET")
+    parser.add_argument("--data_loc", help="path to folder containing the reconstruction images", default="data/kermit")
     parser.add_argument("--bundler_loc", help="path to the RunBundler.sh file", default="../bundler_sfm/RunBundler.sh")
     parser.add_argument("--config_file", help="path to bundler config file as in bundler_sfm", default="bundler.config")
     parser.add_argument("--start_idx", default=0, help="index of image in list.txt you want to start reconstruction from")
