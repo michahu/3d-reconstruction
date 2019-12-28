@@ -22,14 +22,30 @@ def parseFile(file, save_path, toNpz=True):
       lines = f.readlines()
       N = len(lines)
       # print(f'NUMBER OF POINTS: {lines[1].split()[1]}')
-      points = int(lines[1].split()[1])
+      n_cams, n_points = map(int, lines[1].split())
 
-      arr = []
-      for i in range(1, points + 1):
+      pts = []
+      for i in range(1, n_points + 1):
           index = N - i * 3
-          arr.append(np.fromstring(lines[index], sep = " "))
+          pts.append(np.fromstring(lines[index], sep = " "))
+      cams = []
+      offset = 2
+      # https://github.com/snavely/bundler_sfm#output-format
+      for i in range(0, n_cams):
+          idx = offset + i * 5
+          focal_length, rad_dist1, rad_dist2 = np.fromstring(lines[idx], sep = " ")
+          rot = np.array([np.fromstring(lines[idx+j], sep=" ") for j in range(1, 4)])
+          trans = np.fromstring(lines[idx+4], sep=" ")
+          cams.append({
+            "focal_length": focal_length,
+            "rad_dist1": rad_dist1,
+            "rad_dist2": rad_dist2,
+            "rot": rot,
+            "trans": trans,
+          })
+
       if toNpz:
-          np.savez(save_path, points=arr)
+          np.savez(save_path, points=pts, cameras=cams)
       else:
           return arr
 

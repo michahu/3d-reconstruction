@@ -22,4 +22,7 @@ if __name__ == "__main__":
     print("Usage: ./compose_data.py <Output from parseBundleOut.py>")
     exit()
   with np.load(sys.argv[1]) as data:
-    print(data['points'])
+    points = data['points']
+    print(points)
+    cams = data["cameras"]
+    print(cams)
