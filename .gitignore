@@ -10,3 +10,4 @@ settings.json
 .ipynb_checkpoints/
 scratchwork.ipynb
 *.pyc
+plots/

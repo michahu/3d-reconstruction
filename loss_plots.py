@@ -105,16 +105,16 @@ def main(args):
     config.read(config_loc)
     config['Options']['bundler'] = bundler_loc
     config['Options']['bundle'] = f'bundle/{BUNDLER_OUT_FILENAME}'
-    plot_camera_losses(gold_bundle, config, int(args.start_idx), int(args.end_idx), int(args.step), False)
+    plot_camera_losses(gold_bundle, config, int(args.start_idx), int(args.end_idx), int(args.step), bool(args.to_npz))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_loc", help="path to folder containing the reconstruction images", default="data/ET")
     parser.add_argument("--bundler_loc", help="path to the RunBundler.sh file", default="../bundler_sfm/RunBundler.sh")
     parser.add_argument("--config_file", help="path to bundler config file as in bundler_sfm", default="bundler.config")
-    parser.add_argument("--start_idx", help="index of image in list.txt you want to start reconstruction from")
+    parser.add_argument("--start_idx", default=0, help="index of image in list.txt you want to start reconstruction from")
     parser.add_argument("--end_idx", help="index of image in list.txt you want to end reconstruction with")
     parser.add_argument('--to_npz', action='store_true', help='write the losses and corresponding camera numbers to npz')
-    parser.add_argument("--step", help="number of images to add at a time")
+    parser.add_argument("--step", default=2, help="number of images to add at a time")
     args = parser.parse_args()
     main(args)
