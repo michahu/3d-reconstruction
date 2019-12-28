@@ -34,14 +34,12 @@ def parseFile(file, save_path, toNpz=True):
       for i in range(0, n_cams):
           idx = offset + i * 5
           focal_length, rad_dist1, rad_dist2 = np.fromstring(lines[idx], sep = " ")
-          rot = np.array([np.fromstring(lines[idx+j], sep=" ") for j in range(1, 4)])
-          trans = np.fromstring(lines[idx+4], sep=" ")
           cams.append({
             "focal_length": focal_length,
             "rad_dist1": rad_dist1,
             "rad_dist2": rad_dist2,
-            "rot": rot,
-            "trans": trans,
+            "rot": np.array([np.fromstring(lines[idx+j], sep=" ") for j in range(1, 4)]),
+            "trans": np.fromstring(lines[idx+4], sep=" "),
           })
 
       if toNpz:
@@ -50,4 +48,7 @@ def parseFile(file, save_path, toNpz=True):
           return arr
 
 if __name__ == '__main__':
+    if len(sys.argv) < 3:
+      print("Usage: ./parseBundleOut.py <bundle.out> <out.npz>")
+      exit()
     parseFile(sys.argv[1], sys.argv[2])
