@@ -18,7 +18,7 @@ def compute_x(input_data):
     pca = PCA(n_components=3)
     pca.fit(input_data)
     return pca.components_.flatten() # returns a 1 x 9 vector
-  
+
   # compute camera sectors
   def compute_sectors():
     # TODO: compute camera sector vector
@@ -28,8 +28,6 @@ def compute_x(input_data):
 
 def compute_y():
   pass
-
-np.load("kermit_points.npz")
 
 if __name__ == "__main__":
   if len(sys.argv) < 2:
