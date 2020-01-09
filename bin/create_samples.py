@@ -4,6 +4,7 @@ import os
 import itertools
 import argparse
 import shutil
+import re
 
 def fact(n): 1 if n is 0 else n * fact(n-1)
 
@@ -16,13 +17,15 @@ def create_bundles(bundle_loc, image_dir, num_imgs):
   imgs = [os.path.join(image_dir, f) for f in os.listdir(image_dir) if f.endswith(".jpg")]
   # if we care about order, we can change this to permutations
   combs = itertools.combinations(imgs, num_imgs)
+  nums = re.compile(r'\d')
   print("Num combinations:", len(list(itertools.combinations(imgs, num_imgs))))
-  for i, comb in enumerate(combs):
+  for comb in combs:
     for img in comb: shutil.copy(img, ".")
     os.popen("ant -f bundle.xml 2> /dev/null").read()
+    order = '_'.join([''.join(nums.findall(os.path.basename(img))) for img in comb])
     shutil.copy(
       os.path.join(bundle_loc, "output", "bundle.out"),
-      os.path.join(cwd, f'bundle.{i}.out'),
+      os.path.join(cwd, f'bundle_{order}.out'),
     )
     print(".", end="", flush=True)
     clean_imgs()
