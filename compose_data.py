@@ -7,9 +7,6 @@ import numpy as np
 from sklearn.decomposition import PCA
 from emd import emd
 
-num_sectors = 16
-num_pca_components = 3
-
 def get_sector(d):
   if d > np.pi * -1 / 16 and d < np.pi * 1 / 16:
     return 0
@@ -79,21 +76,58 @@ def compute_x(datum):
   return np.concatenate((pca_components, camera_sectors), axis=None)
 
 def compute_y(best: "Description of scene with all cameras",
-              datum: "Array of Data loaded from parsed npz") -> "Discretized cam vec":
-  losses = [emd(best['points'], dat['points']) for dat in datum]
-  best_data = datum[np.argmin(losses)]
-  print(best_data["cameras"])
-  exit()
-  return
+              indices: "camera corresponding to data",
+              data: "Array of Data loaded from parsed npz") -> "Discretized cam vec":
+  losses = [emd(best['points'], dat['points']) for dat in data]
+  ret = [0] * 16
+  best_data = indices[np.argmin(losses)]
+  ret[best_data] = 1
 
-def construct_training_set():
-  pass
+  return ret
+
+def construct_training_set(best, data1, data2, save_path):
+  x = []
+  y = []
+  for index, datum in data1.items():
+    # below line might not work
+    r_indices, r_data = data2[index][0, :], data2[index][1, :]
+    xi = compute_x(datum)
+    yi = compute_y(best, r_indices, r_data)
+    x.append(xi)
+    y.append(yi)
+  np.savez(save_path, x=x, y=y)
+  return x, y
 
 if __name__ == "__main__":
-  if len(sys.argv) < 3:
-    print("Usage: ./compose_data.py <parseBundleOut all cameras> <parseBundleOut some # of cams>")
+  if len(sys.argv) < 5:
+    print("Usage: ./compose_data.py <parseBundleOut all cameras> <parseBundleOut preceding> <parseBundleOut some # of cams> <save_path>")
     exit()
+
   best = np.load(sys.argv[1], allow_pickle=True)
-  data = [np.load(f, allow_pickle=True) for f in sys.argv[2:]]
-  compute_y(best, data)
+
+  # bundle_005
+  data1 = {}
+  for f in sys.argv[2:]:
+    s = f.split('_')
+    s1 = int(s[1])
+    datum = np.load(f, allow_pickle=True)
+    data1.get(s1, []).append(datum)
+
+  # bundle_005_006
+  data2 = {}
+  for f in sys.argv[3:]:
+    s = f.split('_')
+    s1 = int(s[1]) #s1: the initial string
+    s2 = int(s[2]) #s2: the end string
+    datum = np.load(f, allow_pickle=True)
+    data2.get(s1, []).append([s2, datum])
+
+    # what this data structure looks like:
+    # data = {
+    # 5 -> [[6, datum], [7, datum]]
+    # 6 -> [[5, datum], [2, datum]]
+    # }
+
+  x, y = construct_training_set(best, data1, data2, sys.argv[3:])
+  print(x, y)
 
