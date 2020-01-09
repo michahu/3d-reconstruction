@@ -1,7 +1,10 @@
 #!/usr/local/bin/python3
 
 import sys
+import os
 import numpy as np
+import argparse
+
 # need to install scikit learn
 # documentation: https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
 from sklearn.decomposition import PCA
@@ -98,24 +101,21 @@ def construct_training_set(best, data1, data2, save_path):
   np.savez(save_path, x=x, y=y)
   return x, y
 
-if __name__ == "__main__":
-  if len(sys.argv) < 5:
-    print("Usage: ./compose_data.py <parseBundleOut all cameras> <parseBundleOut preceding> <parseBundleOut some # of cams> <save_path>")
-    exit()
+def main(args):
+  data1_loc = os.path.abspath(args.pre)
+  data2_loc = os.path.abspath(args.post)
+  
+  best = np.load(args.gold_label, allow_pickle=True)
 
-  best = np.load(sys.argv[1], allow_pickle=True)
-
-  # bundle_005
   data1 = {}
-  for f in sys.argv[2:]:
+  for f in os.listdir(data1_loc):
     s = f.split('_')
     s1 = int(s[1])
     datum = np.load(f, allow_pickle=True)
     data1.get(s1, []).append(datum)
-
-  # bundle_005_006
+  
   data2 = {}
-  for f in sys.argv[3:]:
+  for f in os.listdir(data2_loc):
     s = f.split('_')
     s1 = int(s[1]) #s1: the initial string
     s2 = int(s[2]) #s2: the end string
@@ -128,6 +128,14 @@ if __name__ == "__main__":
     # 6 -> [[5, datum], [2, datum]]
     # }
 
-  x, y = construct_training_set(best, data1, data2, sys.argv[3:])
+  x, y = construct_training_set(best, data1, data2, args.save_path)
   print(x, y)
 
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--gold_label", type=str, help="path to gold label file")
+  parser.add_argument("--pre", help="path to files")
+  parser.add_argument("--post", help="path to files after 1 step")
+  parser.add_argument("--save_path", help="save_path")
+  args = parser.parse_args()
+  main(args)

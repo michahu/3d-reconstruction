@@ -17,7 +17,7 @@ import sys
 import numpy as np
 
 # saves parsed file to .npz file
-def parseFile(file, save_path, toNpz=True):
+def parseFile(file, toNpz=True):
     with open(file, 'r') as f:
       lines = f.readlines()
       N = len(lines)
@@ -43,12 +43,13 @@ def parseFile(file, save_path, toNpz=True):
           })
 
       if toNpz:
-          np.savez(save_path, points=pts, cameras=cams)
+          np.savez(file, points=pts, cameras=cams)
       else:
           return np.array(pts)
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-      print("Usage: ./parseBundleOut.py <bundle.out> <out.npz>")
+    if len(sys.argv) < 2:
+      print("Usage: ./parseBundleOut.py <bundle.out>")
       exit()
-    parseFile(sys.argv[1], sys.argv[2])
+    for f in sys.argv[2:]:
+      parseFile(f)
