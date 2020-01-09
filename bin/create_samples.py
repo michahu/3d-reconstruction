@@ -8,7 +8,9 @@ import re
 
 def fact(n): 1 if n is 0 else n * fact(n-1)
 
-def clean_imgs(): os.popen("rm *.jpg 2> /dev/null").read()
+def clean_imgs():
+  os.popen("rm *.jpg *.txt *.pgm 2> /dev/null").read()
+  os.popen("rm -rf output 2> /dev/null").read()
 
 def create_bundles(bundle_loc, image_dir, num_imgs):
   cwd = os.getcwd()
@@ -20,13 +22,15 @@ def create_bundles(bundle_loc, image_dir, num_imgs):
   nums = re.compile(r'\d')
   print("Num combinations:", len(list(itertools.combinations(imgs, num_imgs))))
   for comb in combs:
-    for img in comb: shutil.copy(img, ".")
+    for img in comb: shutil.copy(img, bundle_loc)
     os.popen("ant -f bundle.xml 2> /dev/null").read()
     order = '_'.join([''.join(nums.findall(os.path.basename(img))) for img in comb])
-    shutil.copy(
-      os.path.join(bundle_loc, "output", "bundle.out"),
-      os.path.join(cwd, f'bundle_{order}.out'),
-    )
+    try:
+      shutil.copy(
+        os.path.join(bundle_loc, "output", "bundle.out"),
+        os.path.join(cwd, f'bundle_{order}.out'),
+      )
+    except: ...
     print(".", end="", flush=True)
     clean_imgs()
   print("Done!")
