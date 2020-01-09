@@ -51,7 +51,9 @@ def get_camera_angle(camera, center):
   dy = camera[1] - center[1]
   return np.arctan2(dx, dy)
 
-def compute_x(points, cameras):
+def compute_x(datum):
+  pts = datum['points']
+  cams = datum['cameras']
 
   def compute_PCA_components(points):
     # compute PCA vectors
@@ -61,8 +63,6 @@ def compute_x(points, cameras):
   
   def get_center(points):
     return np.mean(points, axis=0)[:2]
-
-  # compute camera sectors
 
   def compute_sectors(cameras, points):
     ret = [0] * 16
@@ -74,8 +74,8 @@ def compute_x(points, cameras):
       ret[sector] = 1
     return ret
   
-  pca_components = compute_PCA_components(points)
-  camera_sectors = compute_sectors(cameras, points)
+  pca_components = compute_PCA_components(pts)
+  camera_sectors = compute_sectors(cams, pts)
   return np.concatenate((pca_components, camera_sectors), axis=None)
 
 def compute_y(best: "Description of scene with all cameras",
@@ -94,13 +94,4 @@ if __name__ == "__main__":
   best = np.load(sys.argv[1], allow_pickle=True)
   data = [np.load(f, allow_pickle=True) for f in sys.argv[2:]]
   compute_y(best, data)
-
-  with np.load(sys.argv[1]) as data:
-    points = data['points']
-    print(points)
-    cams = data["cameras"]
-    print(cams)
-    x = compute_x(points, cams)
-    y = 
-
 
