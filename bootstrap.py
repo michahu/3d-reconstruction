@@ -11,6 +11,7 @@ import time
 import gzip
 import shutil
 import math
+import random
 
 GROUND_TRUTH_FILENAME = "gold.out"
 BUNDLER_OUT_FILENAME = "bundle.out"
@@ -19,12 +20,8 @@ IMAGE_LIST_FILENAME = 'list.txt'
 PARTIAL_IMAGE_LIST_FILENAME = 'partial-list.txt'
 
 def create_partial_image_list():
-    with open(IMAGE_LIST_FILENAME, 'r') as image_list:
-        image_paths = image_list.read().split('\n')
-        image_paths = list(map(lambda x: f'{x}\n', image_paths))
-
     # create new partial list file if it doesn't already exist
-    partial_list_file = open(PARTIAL_IMAGE_LIST_FILENAME, 'w+')
+    partial_list_file = open(PARTIAL_IMAGE_LIST_FILENAME, 'w')
     partial_list_file.close()
 
 def update_partial_image_list(start_idx:int, last_idx:int, n:int):
@@ -39,6 +36,16 @@ def update_partial_image_list(start_idx:int, last_idx:int, n:int):
         return
     with open(PARTIAL_IMAGE_LIST_FILENAME, 'a') as partial_list:
         partial_list.write(''.join(chunk))
+
+def permute_image_list(path=IMAGE_LIST_FILENAME):
+    path = os.path.abspath(path)
+    with open(path, 'r') as image_list:
+        image_paths = image_list.read().split('\n')
+
+    random.shuffle(image_paths)
+    with open(path, 'w+') as image_list:
+        image_list.write('\n'.join(image_paths))
+
 
 # read or create a gold bundle from the images in data_loc. assumes that you've already run bootstrap() on the data_loc
 def read_or_create_gold_bundle(bundler_loc: str, data_loc='./', config_loc=TMP_CONFIG_FILE, force_create=False) -> np.array:

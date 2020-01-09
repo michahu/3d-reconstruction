@@ -9,11 +9,9 @@ import numpy as np
 import subprocess
 import time
 
-def plot_camera_losses(config: cp.ConfigParser, n_start: int, n_end: int, step: int, to_npz=True):
-
-    full_list_loc = config['Options']['IMAGE_LIST']
-    bootstrap(config['Options']['bundler'], config['Options']['data_loc'], image_list=PARTIAL_IMAGE_LIST_FILENAME, create_gold=False)
-    gold_bundle = read_or_create_gold_bundle(config['Options']['bundler'])
+def plot_camera_losses(args, n_start: int, n_end: int, step: int, to_npz=True):
+    bundle = f'bundle/{BUNDLER_OUT_FILENAME}'
+    gold_bundle = read_or_create_gold_bundle(args.bundler_loc)
     x = np.array(range(n_start, n_end+1, step))
     y = np.zeros(len(x))
 
@@ -28,8 +26,8 @@ def plot_camera_losses(config: cp.ConfigParser, n_start: int, n_end: int, step: 
             y[j] = math.inf
             j += 1
             continue
-        subprocess.call([config['Options']['bundler'], TMP_CONFIG_FILE])
-        partial_bundle = np.array(parseFile(config['Options']['bundle'], '', False), dtype=float)
+        subprocess.call([args.bundler_loc, TMP_CONFIG_FILE])
+        partial_bundle = np.array(parseFile(bundle, '', False), dtype=float)
         assert(len(partial_bundle) <= len(gold_bundle))
         partial_bundle_padded = np.zeros((len(gold_bundle), 3))
         partial_bundle_padded[0:len(partial_bundle)] = partial_bundle
@@ -38,8 +36,6 @@ def plot_camera_losses(config: cp.ConfigParser, n_start: int, n_end: int, step: 
         j = j+1
 
     x = list(map(lambda k: min(n_end+1, k+step), x))
-    print(x)
-    print(y)
     fig = plt.figure()
     plt.plot(x, y)
     plt.xlabel('Num. of Cameras')
@@ -49,17 +45,22 @@ def plot_camera_losses(config: cp.ConfigParser, n_start: int, n_end: int, step: 
     if to_npz:
         np.savez(f'partial-{time.strftime("%Y%m%d-%H%M%S")}', x, y)
 
-def main(args):
-    data_loc = os.path.abspath(args.data_loc)
-    bundler_loc = os.path.abspath(args.bundler_loc)
-    config_loc = os.path.abspath(args.config_file)
 
-    config = cp.ConfigParser()
-    config.read(config_loc)
-    config['Options']['bundler'] = bundler_loc
-    config['Options']['bundle'] = f'bundle/{BUNDLER_OUT_FILENAME}'
-    config['Options']['data_loc'] = data_loc
-    plot_camera_losses(config, int(args.start_idx), int(args.end_idx), int(args.step), bool(args.to_npz))
+def plot_permutation_loss(args, n_start: int, n_end: int, step: int, to_npz=True):
+    permute_image_list()
+    plot_camera_losses(args, n_start, n_end, step, to_npz)
+
+def main(args):
+    args.data_loc = os.path.abspath(args.data_loc)
+    args.bundler_loc = os.path.abspath(args.bundler_loc)
+    args.config_loc = os.path.abspath(args.config_file)
+
+    bootstrap(args.bundler_loc, args.data_loc, image_list=PARTIAL_IMAGE_LIST_FILENAME, create_gold=True)
+
+    if args.permute:
+        plot_permutation_loss(args, int(args.start_idx), int(args.end_idx), int(args.step), bool(args.to_npz))
+    else:
+        plot_camera_losses(args, int(args.start_idx), int(args.end_idx), int(args.step), bool(args.to_npz))
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
@@ -70,5 +71,6 @@ if __name__=='__main__':
     parser.add_argument("--end_idx", help="index of image in list.txt you want to end reconstruction with")
     parser.add_argument('--to_npz', default=False, action='store_true', help='write the losses and corresponding camera numbers to npz')
     parser.add_argument("--step", default=2, help="number of images to add at a time")
+    parser.add_argument("--permute", default=False, action='store_true', help='permuate the list of images')
     args = parser.parse_args()
     main(args)
