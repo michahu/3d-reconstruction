@@ -124,7 +124,7 @@ def main(args):
     # print(int_s)
     datum = np.load(data1_loc + '/' + f, allow_pickle=True)
     data1[int_s].append(datum)
-  
+
   data2 = defaultdict(list)
   for f in os.listdir(data2_loc):
     s = f.split('_')[1:]

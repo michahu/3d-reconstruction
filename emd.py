@@ -11,14 +11,9 @@ def pad(a, b):
   return [(math.ceil(v/2.0), math.floor(v/2.0)) for v in pad_shape]
 
 def emd(x1, x2):
-  if len(x1) < len(x2):
-    x1 = np.pad(x1, pad(x1, x2), mode='mean')
-  elif len(x1) > len(x2):
-    x2 = np.pad(x2, pad(x2, x1), mode='mean')
-  N = len(x1)
   d = cdist(x1, x2)
   assignment = linear_sum_assignment(d)
-  return (d[assignment].sum() / N)
+  return d[assignment].sum()
 
 if __name__ == '__main__':
   x1 = np.array([1])[:, np.newaxis]
