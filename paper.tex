@@ -1,0 +1,55 @@
+\documentclass[11pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+
+%-------------------- Formatting
+
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{6pt}
+
+%-------------------- Title
+
+\title{Camera PCA for 3D Reconstruction \vspace{-1ex}}
+\author{Justin Yan, Michael Hu, Julian Knodt}
+\date{}
+\begin{document}
+\maketitle
+
+%-------------------- Text
+
+\section*{Introduction}
+
+Structure from Motion(SfM) is the re-creation of 3D models from multiple images directed at the
+same object from different perspectives. The process for reconstruction is three steps. First,
+locate keypoints in some parts of an image. This is often done through tools like Sift, and is
+not considered part of the SfM algorithm. Then, match keypoints across images with each other,
+stitching images together in a way that will allow for 3D reconstruction. Then, from the matched
+keypoints, derive some representation of a 3D model, generally a point cloud. One such pipeline
+for this is Bundler\cite{2006Szeliski}, one of the original tools for SfM. The paper uses the
+Notre Dame church as a reference, and used a sampling of images from the internet in order to
+reconstruct a visualization of the church. For lesser known monuments and more common objects,
+there will be a much less extensive data set available, and thus for such data sets a complete
+and accurate reconstruction is not always possible. Thus, the question arises, how can more
+images be added to an existing data set that will allow for a better reconstruction? In order to
+answer this question, we hope to find a general approach for finding the general location and
+perspective of an image that would best contribute to the reconstruction of small objects.
+Nominally, the small objects assumption implies that there are not multiple different components
+of the object that are able to be captured which share no components that are physically the
+same. Given that we want to find orientations that would contribute the most to reconstruction,
+we additionally seek to show that there exists important images in existing reconstructions which
+a reconstruction without them would be significantly worse than with them. These important
+images can then be used as training data in order to predict the best location for the next
+camera.
+\section*{Related Work}
+\section*{Implementation}
+\section*{TODO Other Sections}
+% TODO
+\section*{Conclusion}
+\section*{Future Work}
+
+
+\bibliographystyle{unsrt}
+\nocite{*}
+\bibliography{reconstruction.bib}
+
+\end{document}
