@@ -94,16 +94,20 @@ def construct_training_set(best, data1, data2, save_path):
   y = []
   for index, datum in data1.items():
     # below line might not work
+    # the output is sometimes degenerate
+    if data2[index] == []:
+      continue
     data2[index] = np.array(data2[index])
-    # print(data2[index])
+    print(data2[index])
     r_indices, r_data = data2[index][:, 0], data2[index][:, 1]
     xi = compute_x(datum[0])
-    print(xi)
-    print(r_indices)
-    print(r_data)
+    #print(xi)
+    #print(r_indices)
+    #print(r_data)
     yi = compute_y(best, r_indices, r_data)
     x.append(xi)
     y.append(yi)
+    #print(xi, yi)
   np.savez(save_path, x=x, y=y)
   return x, y
 
