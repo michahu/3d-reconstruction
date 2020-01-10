@@ -51,5 +51,5 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
       print("Usage: ./parseBundleOut.py <bundle.out>")
       exit()
-    for f in sys.argv[2:]:
+    for f in sys.argv[1:]:
       parseFile(f)

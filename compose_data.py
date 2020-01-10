@@ -4,6 +4,7 @@ import sys
 import os
 import numpy as np
 import argparse
+from collections import defaultdict
 
 # need to install scikit learn
 # documentation: https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
@@ -93,8 +94,13 @@ def construct_training_set(best, data1, data2, save_path):
   y = []
   for index, datum in data1.items():
     # below line might not work
-    r_indices, r_data = data2[index][0, :], data2[index][1, :]
-    xi = compute_x(datum)
+    data2[index] = np.array(data2[index])
+    # print(data2[index])
+    r_indices, r_data = data2[index][:, 0], data2[index][:, 1]
+    xi = compute_x(datum[0])
+    print(xi)
+    print(r_indices)
+    print(r_data)
     yi = compute_y(best, r_indices, r_data)
     x.append(xi)
     y.append(yi)
@@ -103,24 +109,30 @@ def construct_training_set(best, data1, data2, save_path):
 
 def main(args):
   data1_loc = os.path.abspath(args.pre)
+  # print(f'data1_loc: {data1_loc}')
   data2_loc = os.path.abspath(args.post)
-  
+  # print(f'data2_loc: {data2_loc}')
+
   best = np.load(args.gold_label, allow_pickle=True)
 
-  data1 = {}
+  data1 = defaultdict(list)
   for f in os.listdir(data1_loc):
     s = f.split('_')
-    s1 = int(s[1])
-    datum = np.load(f, allow_pickle=True)
-    data1.get(s1, []).append(datum)
+    s1 = s[1:-1][0]
+    s2 = s[-1].split('.')[0]
+    int_s = int(s1 + s2)
+    # print(int_s)
+    datum = np.load(data1_loc + '/' + f, allow_pickle=True)
+    data1[int_s].append(datum)
   
-  data2 = {}
+  data2 = defaultdict(list)
   for f in os.listdir(data2_loc):
-    s = f.split('_')
-    s1 = int(s[1]) #s1: the initial string
-    s2 = int(s[2]) #s2: the end string
-    datum = np.load(f, allow_pickle=True)
-    data2.get(s1, []).append([s2, datum])
+    s = f.split('_')[1:]
+    s1 = int(''.join(s[:-1]))
+    s2 = int(s[-1].split('.')[0]) #s2: the end string
+    # print(s1, s2)
+    datum = np.load(data2_loc + '/' + f, allow_pickle=True)
+    data2[s1].append([s2, datum])
 
     # what this data structure looks like:
     # data = {
@@ -133,9 +145,14 @@ def main(args):
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
-  parser.add_argument("--gold_label", type=str, help="path to gold label file")
+  parser.add_argument("--gold_label", help="path to gold label file")
   parser.add_argument("--pre", help="path to files")
   parser.add_argument("--post", help="path to files after 1 step")
   parser.add_argument("--save_path", help="save_path")
   args = parser.parse_args()
+
+  # Sample command:
+  # python3 compose_data.py --gold_label=./bin/et/9/*.npz --pre=./bin/et/2 --post=./bin/et/3 --save_path=test.npz
+
+  print(args)
   main(args)

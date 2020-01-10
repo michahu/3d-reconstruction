@@ -13,7 +13,7 @@ def pad(a, b):
 def emd(x1, x2):
   if len(x1) < len(x2):
     x1 = np.pad(x1, pad(x1, x2), mode='mean')
-  elif  len(x1) > len(x2):
+  elif len(x1) > len(x2):
     x2 = np.pad(x2, pad(x2, x1), mode='mean')
   N = len(x1)
   d = cdist(x1, x2)
