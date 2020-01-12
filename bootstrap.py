@@ -93,6 +93,8 @@ def bootstrap(bundler_loc, data_loc, image_list=IMAGE_LIST_FILENAME, create_gold
         read_or_create_gold_bundle(bundler_loc, data_loc, force_create=True)
 
 def run_bundler(bundler_loc, data_loc, num_images, image_list=IMAGE_LIST_FILENAME):
+    if num_images < 2:
+        return
     create_partial_image_list()
     update_partial_image_list(0, num_images, num_images)
     rc = subprocess.call([bundler_loc, TMP_CONFIG_FILE])
@@ -104,13 +106,14 @@ def main(args):
     bundler_loc = os.path.abspath(args.bundler_loc)
     n = int(args.num_images)
 
-    bootstrap(bundler_loc, data_loc, PARTIAL_IMAGE_LIST_FILENAME, create_gold=False)
+    bootstrap(bundler_loc, data_loc, PARTIAL_IMAGE_LIST_FILENAME, create_gold=bool(args.create_gold))
     run_bundler(bundler_loc, data_loc, n)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_loc", help="path to folder containing the reconstruction images", default="data/ET")
+    parser.add_argument("--data_loc", help="path to folder containing the reconstruction images", default="data/NotreDame/non_rd_images")
     parser.add_argument("--bundler_loc", help="path to the RunBundler.sh file", default="../bundler_sfm/RunBundler.sh")
     parser.add_argument("--num_images", help="first k images to process in the list.txt file")
+    parser.add_argument("--create_gold", action='store_true', help='whether or not to force bundler on all images in the dir')
     args = parser.parse_args()
     main(args)
