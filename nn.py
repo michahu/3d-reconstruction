@@ -22,6 +22,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+import sys
+import os
 
 class CameraClassifier(nn.Module):
     def __init__(self):
@@ -31,38 +33,50 @@ class CameraClassifier(nn.Module):
 
     def forward(self, x):
         x = F.relu(self.hidden(x))
-        return F.softmax(self.output(x))
+        x = F.softmax(self.output(x), dim=-1).unsqueeze(0)
+        return x
 
-net = CameraClassifier()
+def main(file, checkpoint):
+    net = CameraClassifier()
+    if os.path.exists(checkpoint):
+        net.load_state_dict(torch.load(checkpoint))
 
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-# doesn't exist yet
-training_data = np.load('data.npz')['training_data']
+    # doesn't exist yet
+    # training_data = np.load('data.npz')['training_data']
+    training_data = np.load(file)
 
-for epoch in range(2):
-    running_loss = 0.0
-    for i, data in enumerate(training_data, 0):
-    # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = data
+    for epoch in range(10):
+        running_loss = 0.0
+        for i, (inputs, labels) in enumerate(zip(training_data['x'], training_data['y'])):
+            # zero the parameter gradients
+            inputs = torch.Tensor(inputs)
+            labels = torch.LongTensor([labels])
 
-        # zero the parameter gradients
-        optimizer.zero_grad()
+            optimizer.zero_grad()
 
-        # forward + backward + optimize
-        outputs = net(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
+            # forward + backward + optimize
+            outputs = net(inputs)
+            # print(outputs.shape)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
 
-        # print statistics
-        running_loss += loss.item()
-        if i % 100 == 99:    # print every 100 mini-batches
-            print('[%d, %5d] loss: %.3f' %
-                    (epoch + 1, i + 1, running_loss / 2000))
-            running_loss = 0.0
+            # print statistics
+            running_loss += loss.item()
+            if i % 10 == 9:    # print every 100 mini-batches
+                print('[%d, %5d] loss: %.3f' %
+                        (epoch + 1, i + 1, running_loss / 10))
+                running_loss = 0.0
 
-torch.save(net.state_dict(), 'checkpoint')
+    torch.save(net.state_dict(), 'checkpoint')
 
-print('Finished Training')
+    print('Finished Training')
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+      print("Usage: python nn.py <training_data.npz> <checkpoint>")
+      exit()
+    main(sys.argv[1], sys.argv[2])

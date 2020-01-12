@@ -14,3 +14,6 @@ plots/
 bundler_sfm/
 easyBundler/
 *.swp
+*.out.npz
+gold.npz
+test.npz
