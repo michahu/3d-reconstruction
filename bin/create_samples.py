@@ -23,7 +23,7 @@ def create_bundles(bundle_loc, image_dir, num_imgs):
   print("Num combinations:", len(list(itertools.combinations(imgs, num_imgs))))
   for comb in combs:
     for img in comb: shutil.copy(img, bundle_loc)
-    os.popen("ant -f bundle.xml").read()
+    ok = os.popen("ant -f bundle.xml 2>&1 > /dev/null").read()
     order = '_'.join([''.join(nums.findall(os.path.basename(img))) for img in comb])
     try:
       shutil.copy(
@@ -31,7 +31,7 @@ def create_bundles(bundle_loc, image_dir, num_imgs):
         os.path.join(cwd, f'bundle_{order}.out'),
       )
     except: ...
-    print(".", end="", flush=True)
+    print("O" if ok == "" else "X", end="", flush=True)
     clean_imgs()
   print("Done!")
 
