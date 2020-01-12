@@ -83,11 +83,8 @@ def compute_y(best: "Description of scene with all cameras",
               indices: "camera corresponding to data",
               data: "Array of Data loaded from parsed npz") -> "Discretized cam vec":
   losses = [emd(best['points'], dat['points']) for dat in data]
-  ret = [0] * 16
   best_data = indices[np.argmin(losses)]
-  ret[best_data] = 1
-
-  return ret
+  return best_data
 
 def construct_training_set(best, data1, data2, save_path):
   x = []
@@ -98,7 +95,7 @@ def construct_training_set(best, data1, data2, save_path):
     if data2[index] == []:
       continue
     data2[index] = np.array(data2[index])
-    print(data2[index])
+    # print(data2[index])
     r_indices, r_data = data2[index][:, 0], data2[index][:, 1]
     xi = compute_x(datum[0])
     #print(xi)
@@ -156,7 +153,7 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   # Sample command:
-  # python3 compose_data.py --gold_label=./bin/et/9/*.npz --pre=./bin/et/2 --post=./bin/et/3 --save_path=test.npz
+  # python3 compose_data.py --gold_label=./bin/et/9/gold.npz --pre=./bin/et/2 --post=./bin/et/3 --save_path=name.npz
 
   print(args)
   main(args)
