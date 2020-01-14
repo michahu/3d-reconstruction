@@ -153,7 +153,6 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   # Sample command:
-  # python3 compose_data.py --gold_label=./bin/et/9/gold.npz --pre=./bin/et/2 --post=./bin/et/3 --save_path=name.npz
 
   print(args)
   main(args)
