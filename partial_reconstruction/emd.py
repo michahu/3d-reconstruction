@@ -25,7 +25,6 @@ def pad(a, b):
     a = tmp
   return a, b
 
-# https://stackoverflow.com/questions/49487399/efficient-way-to-compute-element-wise-euclidiant-distance-between-two-3d-matrice/49490630#49490630
 @nb.njit(fastmath=True,parallel=True)
 def calc_distance(vec_1,vec_2):
     assert vec_1.shape[1]==3 #Enable SIMD-Vectorization (adding some performance)
