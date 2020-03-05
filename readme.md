@@ -1,3 +1,9 @@
+COS 429: Computer Vision  
+Princeton University, Fall 2019   
+Justin Yan, Julian Knodt, Michael Hu  
+
+## Notes
+
 **Running ```loss_plots.py```**
 ```loss_plots.py``` basically bootstraps bundler by chdir into a folder containing reconstruction images, creating a bundler configuration file on the fly, and running bundler on a growing list of images. The script takes care of unzipping gzipped sift files and creating a reference ```gold.out``` bundle from all the images in a sequence if it doesn't already exist.
 1. Create a data folder somewhere in the repo and make sure it's untracked by git.
@@ -7,7 +13,6 @@
 **Reading a bundler outfile:**
 
 https://www.cs.cornell.edu/~snavely/bundler/bundler-v0.4-manual.html
-
 
 **Bundler Installation and Running Bash Program Steps for Linux**
 
@@ -34,29 +39,16 @@ There's also a Python script that is supposed to do the same thing but I haven't
 
 @Julian I just found this: http://openendedgroup.com/field/ReconstructionDistribution which might be easier for MacOS.
 
-
-Camera PCA for SfM Generated Images
+**Camera PCA for SfM Generated Images**
 
 What is [SfM](https://en.wikipedia.org/wiki/Structure_from_motion)?
 
-
-
-Resources for constructing objects from collections of cameras:
+**Resources for constructing objects from collections of cameras**
 
 - [Robust Global Translations with 1DSfM](http://www.cs.cornell.edu/projects/1dsfm/)
 
-Bundler seems to be one of the original tools for SfM.
-- [Structure from Motion (SfM) for Unordered Image
-Collections](http://www.cs.cornell.edu/~snavely/bundler/)
+**Relevant Papers**
 
-Resources for point cloud loss computation:
-
-Need to compute some minimal matching from all points in new to points in old point
-cloud(original with all cameras retained). Generally, we expect there to be fewer points in new
-than in old, and the ordering returned to us might not be the same on different runs of the
-algorithm.
-
-Relevant Papers
 - [Scene Reconstruction and Visualization from Internet Photo Collections: A Survey](https://www.jstage.jst.go.jp/article/ipsjtcva/3/0/3_0_44/_article/-char/ja/)
 - [Modeling the World from Internet Photo Collections](http://phototour.cs.washington.edu/ModelingTheWorld_ijcv07.pdf)
 - [Rapid 3D Reconstruction for Image Sequence Acquired from UAV Camera](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5795716/)
